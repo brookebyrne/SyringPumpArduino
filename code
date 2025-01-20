@@ -1,0 +1,33 @@
+
+}
+stepper.runSpeed();
+while (digitalRead(limitSwitch) == LOW) {
+analogWrite(redLED, 255); //Red indicates motor halting analogWrite(greenLED, 0);
+analogWrite(blueLED, 0);
+stepper.stop(); //Motor stops when switch is triggered
+if (digitalRead(counterclockwiseButton) == LOW && digitalRead(limitSwitch) == LOW) { //If both CCW button and limit switch are pushed, motor spins CCW to reset position analogWrite(redLED, 0);
+analogWrite(greenLED, 255);
+analogWrite(blueLED, 0);
+stepper.setSpeed(-motorMaxSpeed);
+stepper.runSpeed();
+}
+}
+if (digitalRead(latchingButton) == LOW) { //Syringe pumping occurs when the latching (play/pause) button is engaged
+analogWrite(redLED, 0);
+analogWrite(greenLED, 255);
+analogWrite(blueLED, 0);
+potValue = analogRead(pot);
+motorSetSpeed = map(potValue, 8, 923, 8, motorMaxSpeed); //Pot value is scaled to motor speed. 923 value selected instead of 1023 since values above a certain treshold weren't accurately read
+stepper.setSpeed (motorSetSpeed);
+stepper.runSpeed(); //Motor runs at speed set by pot
+motorSetSpeedFloat = float(motorSetSpeed); //Float conversion needed for accurate math flowrate = (((pow((syringe InnerDiameter/2), 2) 3.14159)
+/1000); //Cross-sectional area times linear velocity
+}
+Serial.println(flowrate); //Requested in assignment, in mL/s
+(motorSetSpeedFloat/400*2))
+else { //Motor stops and LED shines yellow when pumping action is paused
+analogWrite(redLED, 255);
+analogWrite(greenLED, 80);
+analogWrite(blueLED, 0);
+}
+}
